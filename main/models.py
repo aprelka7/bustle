@@ -19,7 +19,9 @@ class Dish(models.Model):
     slug = models.CharField(max_length=100, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    main_image = models.ImageField(upload_to='dishes/main/')
+    main_image = models.ImageField(upload_to='dishes/main/', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -32,4 +34,3 @@ class Dish(models.Model):
 class DishImage(models.Model):
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='dishes/extra')
-        

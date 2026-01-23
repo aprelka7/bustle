@@ -1,0 +1,182 @@
+<main class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <div class="mb-8">
+        <nav class="text-sm text-gray-600">
+            <a href="{% url 'main:index' %}" 
+               hx-get="{% url 'main:index' %}" 
+               hx-target="#main-content" 
+               hx-push-url="true"
+               class="hover:text-gray-900">HOME</a>
+            <span class="mx-2">/</span>
+            <a href="{% url 'main:catalog' dish.category.slug %}" 
+               hx-get="{% url 'main:catalog' dish.category.slug %}" 
+               hx-target="#main-content" 
+               hx-push-url="true"
+               class="hover:text-gray-900">{{ dish.category.name|upper }}</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-900">{{ dish.name|upper }}</span>
+        </nav>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <!-- dish Images -->
+        <div class="space-y-4">
+            <!-- Main Image -->
+            <div class="aspect-square overflow-hidden bg-gray-100">
+                {% if disht.main_image %}
+                    <img src="{{ dish.main_image.url }}" 
+                         alt="{{ dish.name }}" 
+                         class="w-full h-full object-cover">
+                {% else %}
+                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span class="text-gray-400">No Image</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Additional Images -->
+            {% if dish.images.all %}
+            <div class="grid grid-cols-3 gap-2">
+                {% for image in pdisht.images.all %}
+                <div class="aspect-square overflow-hidden bg-gray-100 cursor-pointer hover:opacity-80">
+                    <img src="{{ image.image.url }}" 
+                         alt="{{ dish.name }}" 
+                         class="w-full h-full object-cover"
+                         onclick="changeMainImage(this.src)">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- dish Info -->
+        <div class="space-y-6">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-2">
+                    {{ dish.name|upper }}
+                </h1>
+                <p class="text-lg text-gray-600 mb-4">{{ dish.color|upper }}</p>
+                <p class="text-2xl font-bold text-gray-900">${{ dish.price }}</p>
+            </div>
+
+            <!-- Add to Cart -->
+            <div class="space-y-4">
+                <button id="add-to-cart-btn" 
+                        class="w-full bg-black text-white py-3 px-6 text-sm font-medium hover:bg-gray-800 transition-colors"
+                        onclick="addToCart()"
+                        >
+                    ADD TO CART
+                </button>
+                
+                <button class="w-full border border-gray-300 py-3 px-6 text-sm font-medium hover:border-gray-900 transition-colors">
+                    ADD TO WISHLIST
+                </button>
+            </div>
+
+            <!-- dish Details -->
+            <div class="border-t border-gray-200 pt-6">
+                <h3 class="text-sm font-medium text-gray-900 mb-3">DETAILS</h3>
+                <div class="prose prose-sm text-gray-600">
+                    <p>{{ dish.description|linebreaks }}</p>
+                    <p>Created: {{ dish.created_at|date:"F d, Y" }}</p>
+                </div>
+            </div>
+
+            <!-- Care Instructions -->
+            <div class="border-t border-gray-200 pt-6">
+                <h3 class="text-sm font-medium text-gray-900 mb-3">CARE</h3>
+                <div class="prose prose-sm text-gray-600">
+                    <p>Professional dry clean only</p>
+                    <p>Do not bleach</p>
+                    <p>Iron at low temperature</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related dishs -->
+    {% if related_dish %}
+    <div class="mt-16 border-t border-gray-200 pt-16">
+        <h2 class="text-xl font-bold tracking-tight text-gray-900 mb-8">YOU MAY ALSO LIKE</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for related_dish in related_dishs %}
+            <div class="dish-card group cursor-pointer" 
+                 hx-get="{% url 'main:dish_detail' related_dish.slug %}"
+                 hx-target="#main-content"
+                 hx-push-url="true">
+                <div class="aspect-square overflow-hidden bg-gray-100 mb-4">
+                    {% if related_.main_image %}
+                        <img src="{{ related_dish.main_image.url }}" 
+                             alt="{{ related_dish.name }}" 
+                             class="dish-image w-full h-full object-cover">
+                    {% else %}
+                        <div class="dish-image w-full h-full bg-gray-200 flex items-center justify-center">
+                            <span class="text-gray-400 text-sm">No Image</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="text-center">
+                    <h3 class="text-sm font-medium text-gray-900 mb-1">{{ related_dish.name|upper }}</h3>
+                    <p class="text-sm text-gray-600 mb-1">{{ related_dish.color|upper }}</p>
+                    <p class="text-sm font-medium">${{ related_dish.price }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</main>
+
+<script>
+
+    function changeMainImage(src) {
+        const mainImg = document.querySelector('.aspect-square img');
+        if (mainImg) {
+            mainImg.src = src;
+        }
+    }
+
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-20 right-4 bg-black text-white px-6 py-3 rounded shadow-lg z-50 transform translate-x-full transition-transform duration-300';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 10);
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+
+
+    const dishCards = document.querySelectorAll('.dish-card');
+    dishCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+</script>
