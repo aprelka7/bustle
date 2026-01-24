@@ -8,7 +8,7 @@ class DishImageInLine(admin.TabularInline):
     extra = 1
 
 class DishAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price']
+    list_display = ['name', 'description', 'category', 'price']
     list_filter = ['category']
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}

@@ -59,42 +59,13 @@
                 <p class="text-2xl font-bold text-gray-900">${{ dish.price }}</p>
             </div>
 
-            <!-- Sizes -->
-            {% if dish.dish_sizes.all %}
-            <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-3">SIZE</h3>
-                <div class="grid grid-cols-4 gap-2">
-                    {% for dish_size in dish.dish_sizes.all %}
-                    <div class="size-option">
-                        <input type="radio" 
-                               name="size" 
-                               class="size-radio hidden"
-                               id="size-{{ dish_size.id }}"
-                               value="{{ dish_size.id }}"
-                               data-size="{{ dish_size.size.name }}"
-                               {% if dish_size.stock == 0 %}disabled{% endif %}
-                               {% if forloop.first and dish_size.stock > 0 %}checked{% endif %}>
-                        <label for="size-{{ dish_size.id }}"
-                               class="block border border-gray-300 py-2 px-3 text-sm font-medium text-center cursor-pointer hover:border-gray-900 transition-colors {% if dish_size.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}">
-                            {{ dish_size.size.name }}
-                        </label>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% else %}
-            <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-3">SIZE</h3>
-                <p class="text-sm text-gray-600">No sizes available</p>
-            </div>
-            {% endif %}
+          
 
             <!-- Add to Cart -->
             <div class="space-y-4">
                 <button id="add-to-cart-btn" 
                         class="w-full bg-black text-white py-3 px-6 text-sm font-medium hover:bg-gray-800 transition-colors"
                         onclick="addToCart()"
-                        {% if not dish.dish_sizes.all %}disabled{% endif %}>
                     ADD TO CART
                 </button>
                 
@@ -129,15 +100,15 @@
     <div class="mt-16 border-t border-gray-200 pt-16">
         <h2 class="text-xl font-bold tracking-tight text-gray-900 mb-8">YOU MAY ALSO LIKE</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {% for related_dish in related_dishes %}
+            {% for related_dishes in related_dishes %}
             <div class="dish-card group cursor-pointer" 
-                 hx-get="{% url 'main:dish_detail' related_dish.slug %}"
+                 hx-get="{% url 'main:dish_detail' related_dishes.slug %}"
                  hx-target="#main-content"
                  hx-push-url="true">
                 <div class="aspect-square overflow-hidden bg-gray-100 mb-4">
-                    {% if related_dish.main_image %}
-                        <img src="{{ related_dish.main_image.url }}" 
-                             alt="{{ related_dish.name }}" 
+                    {% if related_dishes.main_image %}
+                        <img src="{{ related_dishes.main_image.url }}" 
+                             alt="{{ related_dishes.name }}" 
                              class="dish-image w-full h-full object-cover">
                     {% else %}
                         <div class="dish-image w-full h-full bg-gray-200 flex items-center justify-center">
@@ -146,9 +117,9 @@
                     {% endif %}
                 </div>
                 <div class="text-center">
-                    <h3 class="text-sm font-medium text-gray-900 mb-1">{{ related_dish.name|upper }}</h3>
-                    <p class="text-sm text-gray-600 mb-1">{{ related_dish.color|upper }}</p>
-                    <p class="text-sm font-medium">${{ related_dish.price }}</p>
+                    <h3 class="text-sm font-medium text-gray-900 mb-1">{{ related_dishes.name|upper }}</h3>
+                    <p class="text-sm text-gray-600 mb-1">{{ related_dishes.color|upper }}</p>
+                    <p class="text-sm font-medium">${{ related_dishes.price }}</p>
                 </div>
             </div>
             {% endfor %}

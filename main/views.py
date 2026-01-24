@@ -26,8 +26,8 @@ class CatalogView(TemplateView):
     template = 'main/base.html'
 
     FILTER_MAPPING = {
-        'min_price' : lambda queryset, value: queryset.filter(price_gte=value),
-        'max_price' : lambda queryset, value: queryset.filter(price_lte=value),
+        'min_price' : lambda queryset, value: queryset.filter(price__gte=value),
+        'max_price' : lambda queryset, value: queryset.filter(price__lte=value),
     }
 
     def context_data(self, *args, **kwargs):

@@ -17,6 +17,7 @@ class Category(models.Model):
 class Dish(models.Model):
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=200, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     main_image = models.ImageField(upload_to='dishes/main/', blank=True)
