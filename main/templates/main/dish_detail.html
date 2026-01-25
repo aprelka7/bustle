@@ -6,7 +6,7 @@
                hx-get="{% url 'main:index' %}" 
                hx-target="#main-content" 
                hx-push-url="true"
-               class="hover:text-gray-900">HOME</a>
+               class="hover:text-gray-900">ДОМОЙ</a>
             <span class="mx-2">/</span>
             <a href="{% url 'main:catalog' dish.category.slug %}" 
                hx-get="{% url 'main:catalog' dish.category.slug %}" 
@@ -29,7 +29,7 @@
                          class="w-full h-full object-cover">
                 {% else %}
                     <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <span class="text-gray-400">No Image</span>
+                        <span class="text-gray-400">Нет изображения</span>
                     </div>
                 {% endif %}
             </div>
@@ -56,7 +56,7 @@
                     {{ dish.name|upper }}
                 </h1>
                 <p class="text-lg text-gray-600 mb-4">{{ dish.color|upper }}</p>
-                <p class="text-2xl font-bold text-gray-900">${{ dish.price }}</p>
+                <p class="text-2xl font-bold text-gray-900">₽{{ dish.price }}</p>
             </div>
 
 
@@ -65,13 +65,13 @@
                 <button id="add-to-cart-btn" 
                         class="w-full bg-black text-white py-3 px-6 text-sm font-medium hover:bg-gray-800 transition-colors"
                         onclick="addToCart()">
-                    ADD TO CART
+                    Добавить в корзину
                 </button>
             </div>
 
             <!-- dish Details -->
             <div class="border-t border-gray-200 pt-6">
-                <h3 class="text-sm font-medium text-gray-900 mb-3">DETAILS</h3>
+                <h3 class="text-sm font-medium text-gray-900 mb-3">ПОДРОБНЕЕ</h3>
                 <div class="prose prose-sm text-gray-600">
                     <p>{{ dish.description|linebreaks }}</p>
                     <p>Created: {{ dish.created_at|date:"F d, Y" }}</p>
@@ -82,7 +82,7 @@
     <!-- Related dishes -->
     {% if related_dishes %}
     <div class="mt-16 border-t border-gray-200 pt-16">
-        <h2 class="text-xl font-bold tracking-tight text-gray-900 mb-8">YOU MAY ALSO LIKE</h2>
+        <h2 class="text-xl font-bold tracking-tight text-gray-900 mb-8">ТАК ЖЕ МОЖЕТ ПОНРАВИТЬСЯ</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {% for related_dish in related_dishes %}
             <div class="dish-card group cursor-pointer" 
@@ -96,14 +96,14 @@
                              class="dish-image w-full h-full object-cover">
                     {% else %}
                         <div class="dish-image w-full h-full bg-gray-200 flex items-center justify-center">
-                            <span class="text-gray-400 text-sm">No Image</span>
+                            <span class="text-gray-400 text-sm">Нет изображения</span>
                         </div>
                     {% endif %}
                 </div>
                 <div class="text-center">
                     <h3 class="text-sm font-medium text-gray-900 mb-1">{{ related_dish.name|upper }}</h3>
                     <p class="text-sm text-gray-600 mb-1">{{ related_dish.color|upper }}</p>
-                    <p class="text-sm font-medium">${{ related_dish.price }}</p>
+                    <p class="text-sm font-medium">₽{{ related_dish.price }}</p>
                 </div>
             </div>
             {% endfor %}

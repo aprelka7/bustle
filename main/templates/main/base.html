@@ -132,7 +132,7 @@
                    hx-target="#main-content" 
                    hx-push-url="true"
                    class="mobile-nav-link block text-lg font-medium text-gray-900 hover:text-gray-700 py-2 border-b border-gray-200">
-                   HOME
+                   ДОМОЙ
                 </a>
                 {% for category in categories %}
                 <a href="{% url 'main:catalog' category.slug %}" 
@@ -146,10 +146,10 @@
             </nav>
             
             <div class="mt-8 space-y-4">
-                <a href="#" class="block text-sm font-medium text-gray-900 hover:text-gray-700 py-2">SEARCH</a>
-                    ACCOUNT
+                <a href="#" class="block text-sm font-medium text-gray-900 hover:text-gray-700 py-2">ПОИСК</a>
+                    АККАУНТ
                 </a>
-                <a href="#" id="mobileCart" class="block text-sm font-medium text-gray-900 hover:text-gray-700 py-2">CART (0)</a>
+                <a href="#" id="mobileCart" class="block text-sm font-medium text-gray-900 hover:text-gray-700 py-2">КОРЗИНА (0)</a>
             </div>
         </div>
     </div>
@@ -198,12 +198,12 @@
                                 hx-target="#mobile-search-wrapper" 
                                 hx-swap="innerHTML"
                                 class="text-sm font-medium uppercase hover:text-gray-600">
-                            SEARCH
+                            ПОИСК
                         </button>
                     </div>
                     <a
                     class="text-sm font-medium text-gray-900 uppercase hover:text-gray-600">
-                        ACCOUNT
+                        АККАУНТ
                     </a>
                     <a href="#" id="desktopCart" class="text-sm font-medium text-gray-900 hover:text-gray-700">CART (0)</a>
                 </div>
@@ -230,7 +230,7 @@
                     Bustle
                 </h2>
                 <p class="text-lg text-gray-600 mb-8">
-                    Select a category to browse our menu
+                    Выберите категорию
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                     {% for category in categories %}
@@ -288,7 +288,7 @@
             updateCartCount();
             
             function updateHeaderCartCount(count) {
-                const cartText = `CART (${count})`;
+                const cartText = `КОРЗИНА (${count})`;
                 if (desktopCart) desktopCart.textContent = cartText;
                 if (mobileCart) mobileCart.textContent = cartText;
                 if (mobileCartHeader) mobileCartHeader.textContent = cartText;

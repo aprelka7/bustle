@@ -8,7 +8,7 @@
                      class="max-h-full max-w-full object-contain">
             {% else %}
                 <div class="w-full h-full flex items-center justify-center">
-                    <span class="text-gray-400">No Image</span>
+                    <span class="text-gray-400">Нет изображения</span>
                 </div>
             {% endif %}
         </div>
@@ -16,7 +16,7 @@
         <!-- dish Info -->
         <div class="text-center">
             <h3 class="font-bold text-sm">{{ item.dish.name|upper }}</h3>
-            <p class="font-bold mt-1">${{ item.dish.price }}</p>
+            <p class="font-bold mt-1">₽{{ item.dish.price }}</p>
             
             <!-- Quantity Controls -->
             <div class="flex items-center justify-center mt-2">
@@ -52,7 +52,7 @@
                     hx-swap="outerHTML"
                     hx-trigger="click"
                     hx-on::after-request="console.log('Remove Item {{ item.id }} Request Completed');">
-                Remove
+                Убрать
             </button>
         </div>
     </div>
