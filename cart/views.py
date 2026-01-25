@@ -70,7 +70,7 @@ class AddToCartView(CartMixin, View):
             return JsonResponse({
                 'success': True,
                 'total_items': cart.total_items,
-                'message': f"{dish.name} added to cart",
+                'message': f"{dish.name} добавлено в корзину",
                 'cart_item_id': cart_item.id,
             })
 class UpdateCartItemView(CartMixin, View):
