@@ -23,7 +23,7 @@ class IndexView(TemplateView):
         return TemplateResponse(request, self.template_name, context)
     
 class CatalogView(TemplateView):
-    template = 'main/base.html'
+    template_name = 'main/base.html'
 
     FILTER_MAPPING = {
         'min_price' : lambda queryset, value: queryset.filter(price__gte=value),
@@ -43,7 +43,7 @@ class CatalogView(TemplateView):
         query = self.request.GET.get('q')
         if query:
             dishes = dishes.filter(
-                Q(name_icontains=query)
+                Q(name__icontains=query)
             )
         
         filter_params = {}
@@ -76,9 +76,9 @@ class CatalogView(TemplateView):
         context = self.context_data(**kwargs)
         if request.headers.get('HX-Request'):
             if context.get('show_search'):
-                return TemplateResponse(request, '/main/search_input.html', context)
+                return TemplateResponse(request, 'main/search_input.html', context)
             elif context.get('reset_search'):
-                return TemplateResponse(request, 'msin/search_button.html', {})
+                return TemplateResponse(request, 'main/search_button.html', {})
             template = 'main/filter_modal.html' if request.GET.get('show_filters') == 'true' else 'main/catalog.html'
             return TemplateResponse(request, template, context)
         return TemplateResponse(request, self.template_name, context)
@@ -86,7 +86,7 @@ class CatalogView(TemplateView):
 
 class DishDetailView(DetailView):
     model = Dish
-    template_name = 'base.html'
+    template_name = 'main/dish_detail.html'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
 
@@ -106,4 +106,4 @@ class DishDetailView(DetailView):
         context = self.get_context_data(**kwargs)
         if request.headers.get('HX-Response'):
             return TemplateResponse(request, 'main/dish_detail.html', context)
-        raise TemplateResponse(request, self.template_name, context)
+        return self.render_to_response(context)
