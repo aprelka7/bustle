@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'users',
     'main',
     'cart',
-    'users',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'bustle.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
+""" DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGES_DB'),
@@ -96,7 +96,16 @@ DATABASES = {
         'PORT': os.getenv('POSTRES_PORT', '5432'),
         'ATOMIC_REQUESTS': True,
     }
+} """
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        'ATOMIC_REQUESTS': True
+    }
 }
+
 
 
 # Password validation
@@ -141,3 +150,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SESSION_COOKIE_AGE = 86400 #30 дней
 SESSION_SAVE_EVERY_REQUEST = True
+
+AUTH_USER_MODEL = 'users.CustomUser'    
+""" DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' """
+LOGIN_URL = 'users:login'

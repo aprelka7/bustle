@@ -30,8 +30,8 @@ class CatalogView(TemplateView):
         'max_price' : lambda queryset, value: queryset.filter(price__lte=value),
     }
 
-    def context_data(self, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
         category_slug = kwargs.get('category_slug')
         categories = Category.objects.all()
         dishes = Dish.objects.all().order_by('-created_at')
@@ -60,7 +60,7 @@ class CatalogView(TemplateView):
         context.update({
             'categories': categories,
             'dishes': dishes,
-            'current_category': category_slug,
+            'current_category': current_category,
             'filter_params': filter_params,
             'search_query': query or '',
 
@@ -73,7 +73,7 @@ class CatalogView(TemplateView):
         return context
     
     def get(self, request, *args, **kwargs):
-        context = self.context_data(**kwargs)
+        context = self.get_context_data(**kwargs)
         if request.headers.get('HX-Request'):
             if context.get('show_search'):
                 return TemplateResponse(request, 'main/search_input.html', context)
@@ -104,6 +104,6 @@ class DishDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(**kwargs)
-        if request.headers.get('HX-Response'):
+        if request.headers.get('HX-Request'):
             return TemplateResponse(request, 'main/dish_detail.html', context)
         return self.render_to_response(context)

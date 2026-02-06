@@ -8,6 +8,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script>
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            if (csrfToken) {
+                evt.detail.headers['X-CSRFToken'] = csrfToken;
+            }});
+        </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
@@ -147,6 +155,11 @@
             
             <div class="mt-8 space-y-4">
                 <a href="#" class="block text-sm font-medium text-gray-900 hover:text-gray-700 py-2">ПОИСК</a>
+                <a href="{% url 'users:profile' %}" 
+                hx-get="{% url 'users:profile' %}" 
+                hx-target="#main-content" 
+                hx-push-url="true"
+                class="text-sm font-medium text-gray-900 uppercase hover:text-gray-600">
                     АККАУНТ
                 </a>
                 <a href="#" id="mobileCart" class="block text-sm font-medium text-gray-900 hover:text-gray-700 py-2">КОРЗИНА (0)</a>
@@ -201,16 +214,19 @@
                             ПОИСК
                         </button>
                     </div>
-                    <a
+                    <a href="{% url 'users:profile' %}" 
+                    hx-get="{% url 'users:profile' %}" 
+                    hx-target="#main-content" 
+                    hx-push-url="true"
                     class="text-sm font-medium text-gray-900 uppercase hover:text-gray-600">
                         АККАУНТ
                     </a>
-                    <a href="#" id="desktopCart" class="text-sm font-medium text-gray-900 hover:text-gray-700">CART (0)</a>
+                    <a href="#" id="desktopCart" class="text-sm font-medium text-gray-900 hover:text-gray-700">КОРЗИНА (0)</a>
                 </div>
                 
                 <!-- Mobile Cart Icon -->
                 <div class="md:hidden">
-                    <a href="#" id="mobileCartHeader" class="text-xs font-medium text-gray-900">CART (0)</a>
+                    <a href="#" id="mobileCartHeader" class="text-xs font-medium text-gray-900">КОРЗИНА (0)</a>
                 </div>
             </div>
         </div>
@@ -355,7 +371,7 @@
             const desktopCart = document.getElementById('desktopCart');
             const mobileCart = document.getElementById('mobileCart');
             const mobileCartHeader = document.getElementById('mobileCartHeader');
-            const cartText = `CART (${count})`;
+            const cartText = `КОРЗИНА (${count})`;
             
             if (desktopCart) desktopCart.textContent = cartText;
             if (mobileCart) mobileCart.textContent = cartText;
