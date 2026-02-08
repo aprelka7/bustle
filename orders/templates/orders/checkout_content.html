@@ -137,13 +137,13 @@
             <!-- Order Summary -->
             <div id="order-summary" class="space-y-3 border-t pt-4">
                 <div class="flex justify-between text-sm">
-                    <span>Итого • {{ cart.total_items }} {{ cart.total_items|pluralize }}</span>
+                    <span>Итого • {{ cart.total_items }}</span>
                     <span>₽{{ total_price|floatformat:2 }}</span>
                 </div>
                 
                 <div class="flex justify-between text-sm">
                     <span>Доставка</span>
-                    <span class="text-gray-600">На следующем шаге</span>
+                    <span class="text-gray-600">Далее</span>
                 </div>
                 
                 <div class="flex justify-between text-lg font-medium pt-3 border-t">
