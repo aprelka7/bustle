@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.html import strip_tags
 from phonenumber_field.modelfields import PhoneNumberField
 
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, phone, first_name, last_name, password=None, **extra_fields):
         if not phone:

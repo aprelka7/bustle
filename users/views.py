@@ -9,7 +9,7 @@ from .forms import CustomUserCreationForm, CustomUserLoginForm, \
 from .models import CustomUser
 from django.contrib import messages
 from main.models import Dish, Allergen
-""" from orders.models import Order """
+from orders.models import Order
 
 
 def register(request):
@@ -136,7 +136,7 @@ def logout_view(request):
         return HttpResponse(headers={'HX-Redirect': reverse('main:index')})
     return redirect('main:index')
 
-""" @login_required
+@login_required
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return TemplateResponse(request, 'users/partials/order_history.html', {'orders': orders})
@@ -144,4 +144,4 @@ def order_history(request):
 @login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    return TemplateResponse(request, 'users/partials/order_detail.html', {'order': order}) """
+    return TemplateResponse(request, 'users/partials/order_detail.html', {'order': order})
