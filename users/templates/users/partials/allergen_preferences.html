@@ -1,0 +1,37 @@
+<div class="bg-white p-6 rounded-lg shadow-lg card">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4 tracking-wide">
+        МОИ АЛЛЕРГЕНЫ
+    </h2>
+    <p class="text-sm text-gray-600 mb-4">
+        Отметьте аллергены, которые нужно исключить. Блюда с этими аллергенами не будут показываться в каталоге и рекомендациях.
+    </p>
+    {% if saved %}
+    <p class="text-sm text-green-600 mb-4 font-medium">Настройки сохранены.</p>
+    {% endif %}
+    <form hx-post="{% url 'users:update_allergen_preferences' %}"
+          hx-target="#profile-main-content"
+          hx-swap="innerHTML"
+          class="space-y-3">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-96 overflow-y-auto">
+            {% for allergen in all_allergens %}
+            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                <input type="checkbox"
+                       name="allergen_ids"
+                       value="{{ allergen.pk }}"
+                       {% if allergen.pk in user_excluded_ids %}checked{% endif %}
+                       class="rounded border-gray-300 text-amber-600 focus:ring-amber-500">
+                <span class="text-sm text-gray-800">{{ allergen.name }}</span>
+            </label>
+            {% empty %}
+            <p class="text-sm text-gray-500 col-span-2">Список аллергенов пока пуст. Добавьте их в админке.</p>
+            {% endfor %}
+        </div>
+        {% if all_allergens %}
+        <button type="submit"
+                class="mt-4 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 transition-colors duration-200 text-sm tracking-wide">
+            Сохранить
+        </button>
+        {% endif %}
+    </form>
+</div>

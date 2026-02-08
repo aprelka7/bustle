@@ -44,8 +44,21 @@
                                hx-get="{% url 'users:profile' %}" 
                                hx-target="#main-content" 
                                hx-push-url="true"
-                               class="flex items-center text-gray-700 font-semibold text-sm tracking-wide hover:text-gray-900 {% if request.resolver_match.url_name == 'profile' %}text-gray-900 border-l-4 border-gray-500 pl-2{% endif %}">
+                               class="profile-nav-link flex items-center text-gray-700 font-semibold text-sm tracking-wide hover:text-gray-900 {% if request.resolver_match.url_name == 'profile' %}text-gray-900 border-l-4 border-gray-500 pl-2{% endif %}"
+                               data-url="{% url 'users:profile' %}"
+                               data-target="#main-content">
                                 АККАУНТ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'users:allergen_preferences' %}" 
+                               hx-get="{% url 'users:allergen_preferences' %}" 
+                               hx-target="#profile-main-content" 
+                               hx-swap="innerHTML"
+                               class="profile-nav-link flex items-center text-gray-700 font-semibold text-sm tracking-wide hover:text-gray-900"
+                               data-url="{% url 'users:allergen_preferences' %}"
+                               data-target="#profile-main-content">
+                                АЛЛЕРГЕНЫ
                             </a>
                         </li>
                         <li class="nav-item">
@@ -142,7 +155,14 @@
                                     {% endif %}
                                 </div>
                                 <h3 class="text-sm font-semibold text-gray-900">{{ dish.name }}</h3>
-                                <p class="text-sm text-gray-700">€{{ dish.price }}</p>
+                                {% if dish.allergens.exists %}
+                                <div class="flex flex-wrap gap-1 my-1">
+                                    {% for allergen in dish.allergens.all %}
+                                    <span class="inline-block px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded">{{ allergen.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <p class="text-sm text-gray-700">₽{{ dish.price }}</p>
                                 <a 
                                     href="{% url 'main:dish_detail' dish.slug %}" 
                                     hx-get="{% url 'main:dish_detail' dish.slug %}" 

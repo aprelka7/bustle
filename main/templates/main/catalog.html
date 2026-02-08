@@ -10,7 +10,7 @@
             {% endif %}
         </h2>
         <button class="bg-black text-white px-4 py-2 text-sm font-medium uppercase hover:bg-gray-800 transition-colors w-full sm:w-auto" 
-                hx-get="{% if current_category %}{% url 'main:catalog' current_category.slug %}{% else %}{% url 'main:catalog_all' %}{% endif %}?show_filters=true&color={{ filter_params.color|urlencode }}&min_price={{ filter_params.min_price|urlencode }}&max_price={{ filter_params.max_price|urlencode }}&size={{ filter_params.size|urlencode }}" 
+                hx-get="{% if current_category %}{% url 'main:catalog' current_category.slug %}{% else %}{% url 'main:catalog_all' %}{% endif %}?show_filters=true&amp;show_all={{ filter_params.show_all|urlencode }}&amp;min_price={{ filter_params.min_price|urlencode }}&amp;max_price={{ filter_params.max_price|urlencode }}&amp;q={{ filter_params.q|urlencode }}" 
                 hx-target="#filter-modal-content"
                 hx-swap="innerHTML"
                 hx-on::after-request="document.getElementById('filter-modal').classList.remove('hidden')">
@@ -44,7 +44,13 @@
             </div>
             <div class="text-center">
                 <h3 class="text-sm font-medium text-gray-900 mb-1 uppercase">{{ dish.name }}</h3>
-                <p class="text-sm text-gray-600 mb-1 uppercase">{{ dish.color }}</p>
+                {% if dish.allergens.exists %}
+                <div class="flex flex-wrap justify-center gap-1 mb-1">
+                    {% for allergen in dish.allergens.all %}
+                    <span class="inline-block px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded">{{ allergen.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 <p class="text-sm font-medium">₽{{ dish.price }}</p>
             </div>
         </div>

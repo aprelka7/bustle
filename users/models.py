@@ -4,7 +4,6 @@ from django.utils.html import strip_tags
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, phone, first_name, last_name, password=None, **extra_fields):
         if not phone:
@@ -37,6 +36,12 @@ class CustomUser(AbstractUser):
     city = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
+    excluded_allergens = models.ManyToManyField(
+        'main.Allergen',
+        related_name='users_excluding',
+        blank=True,
+        verbose_name='исключить аллергены'
+    )
 
     username = CustomUserManager()
 

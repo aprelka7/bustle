@@ -8,7 +8,7 @@ from .forms import CustomUserCreationForm, CustomUserLoginForm, \
     CustomUserUpdateForm
 from .models import CustomUser
 from django.contrib import messages
-from main.models import Dish
+from main.models import Dish, Allergen
 """ from orders.models import Order """
 
 
@@ -48,12 +48,52 @@ def profile_view(request):
     else:
         form = CustomUserUpdateForm(instance=request.user)
 
-    recommended_dishes = Dish.objects.all().order_by('id')[:3]
+    recommended_dishes = Dish.objects.all().order_by('id')
+    if request.user.is_authenticated:
+        excluded_ids = list(request.user.excluded_allergens.values_list('pk', flat=True))
+        if excluded_ids:
+            recommended_dishes = recommended_dishes.exclude(allergens__id__in=excluded_ids).distinct()
+    recommended_dishes = recommended_dishes[:3]
 
     return TemplateResponse(request, 'users/profile.html', {
         'form': form,
         'user': request.user,
-        'recommended_dishes': recommended_dishes
+        'recommended_dishes': recommended_dishes,
+        'all_allergens': Allergen.objects.all().order_by('name'),
+    })
+
+
+@login_required(login_url='/users/login')
+def allergen_preferences(request):
+    """Страница выбора аллергенов в профиле."""
+    all_allergens = Allergen.objects.all().order_by('name')
+    user_excluded_ids = set(request.user.excluded_allergens.values_list('pk', flat=True))
+    return TemplateResponse(request, 'users/partials/allergen_preferences.html', {
+        'all_allergens': all_allergens,
+        'user_excluded_ids': user_excluded_ids,
+    })
+
+
+@login_required(login_url='/users/login')
+def update_allergen_preferences(request):
+    """Сохранение выбранных аллергенов (исключить из выдачи)."""
+    if request.method != 'POST':
+        if request.headers.get('HX-Request'):
+            return HttpResponse(headers={'HX-Redirect': reverse('users:profile')})
+        return redirect('users:profile')
+    ids = request.POST.getlist('allergen_ids')
+    try:
+        ids = [int(x) for x in ids if x.strip().isdigit()]
+    except (ValueError, AttributeError):
+        ids = []
+    valid_ids = list(Allergen.objects.filter(pk__in=ids).values_list('pk', flat=True))
+    request.user.excluded_allergens.set(valid_ids)
+    user_excluded_ids = set(valid_ids)
+    all_allergens = Allergen.objects.all().order_by('name')
+    return TemplateResponse(request, 'users/partials/allergen_preferences.html', {
+        'all_allergens': all_allergens,
+        'user_excluded_ids': user_excluded_ids,
+        'saved': True,
     })
 
 

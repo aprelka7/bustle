@@ -35,6 +35,11 @@ class CatalogView(TemplateView):
         category_slug = kwargs.get('category_slug')
         categories = Category.objects.all()
         dishes = Dish.objects.all().order_by('-created_at')
+        show_all_dishes = self.request.GET.get('show_all') in ('1', 'true', 'on')
+        if self.request.user.is_authenticated and not show_all_dishes:
+            excluded_ids = list(self.request.user.excluded_allergens.values_list('pk', flat=True))
+            if excluded_ids:
+                dishes = dishes.exclude(allergens__id__in=excluded_ids).distinct()
         current_category = None
 
         if category_slug:
@@ -56,6 +61,7 @@ class CatalogView(TemplateView):
                 filter_params[param] = ''
             
         filter_params['q'] = query or ''
+        filter_params['show_all'] = '1' if show_all_dishes else ''
 
         context.update({
             'categories': categories,
@@ -94,10 +100,13 @@ class DishDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         dish = self.get_object()
+        related = Dish.objects.filter(category=dish.category).exclude(id=dish.id)
+        if self.request.user.is_authenticated:
+            excluded_ids = list(self.request.user.excluded_allergens.values_list('pk', flat=True))
+            if excluded_ids:
+                related = related.exclude(allergens__id__in=excluded_ids).distinct()
         context['categories'] = Category.objects.all()
-        context['related_dishes'] = Dish.objects.filter(
-            category = dish.category
-        ).exclude(id = dish.id)[:4]
+        context['related_dishes'] = related[:4]
         context['current_category'] = dish.category.slug
         return context
 

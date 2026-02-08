@@ -7,12 +7,26 @@
         </button>
     </div>
 
-    <form hx-get="{% if current_category %}{% url 'main:catalog' current_category %}{% else %}{% url 'main:catalog_all' %}{% endif %}" 
+    <form hx-get="{% if current_category %}{% url 'main:catalog' current_category.slug %}{% else %}{% url 'main:catalog_all' %}{% endif %}" 
           hx-target="#main-content" 
           hx-push-url="true">
         <input type="hidden" name="q" value="{{ filter_params.q|default:'' }}">
         
         <div class="space-y-6">
+            <!-- Show all dishes (including allergens) -->
+            {% if request.user.is_authenticated %}
+            <div>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox"
+                           name="show_all"
+                           value="1"
+                           {% if filter_params.show_all %}checked{% endif %}
+                           class="rounded border-gray-300 text-amber-600 focus:ring-amber-500">
+                    <span class="text-sm text-gray-800">Показывать все блюда (включая с моими аллергенами)</span>
+                </label>
+            </div>
+            {% endif %}
+
             <!-- Price Range -->
             <div>
                 <h3 class="text-sm font-medium text-gray-900 mb-3">ЦЕНОВОЙ ДИАПАЗОН</h3>
