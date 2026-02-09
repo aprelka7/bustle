@@ -8,6 +8,8 @@ dependencies = [
     "django>=6.0.2",
     "django-phonenumber-field>=8.4.0",
     "dotenv>=0.9.9",
+    "minio-storage>=0.1.5",
     "phonenumbers>=9.0.23",
     "pillow>=12.1.0",
+    "psycopg2-binary>=2.9.11",
 ]
