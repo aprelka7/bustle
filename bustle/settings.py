@@ -36,6 +36,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://bustle.jkproduction.pro',
     'http://www.bustle.jkproduction.pro',
+    'https://bustle.jkproduction.pro',
+    'https://www.bustle.jkproduction.pro',
 ]
 
 CSRF_COOKIE_SECURE = True
@@ -67,13 +69,13 @@ MINIO_STORAGE_ACCESS_KEY = os.getenv('MINIO_STORAGE_ACCESS_KEY')
 MINIO_STORAGE_SECRET_KEY = os.getenv('MINIO_STORAGE_SECRET_KEY')
 MINIO_STORAGE_MEDIA_BUCKET_NAME = os.getenv('MINIO_STORAGE_MEDIA_BUCKET_NAME')
 MINIO_STORAGE_USE_HTTPS = True
+MINIO_STORAGE_REGION = os.getenv('MINIO_STORAGE_REGION', 'us-east-1')
 
 # Использование MinIO для медиа
 DEFAULT_FILE_STORAGE = 'minio_storage.storage.MinioMediaStorage'
 
-
-
-MEDIA_URL = f"http://{MINIO_STORAGE_ENDPOINT}/{MINIO_STORAGE_MEDIA_BUCKET_NAME}/"
+_scheme = 'https' if MINIO_STORAGE_USE_HTTPS else 'http'
+MEDIA_URL = f"{_scheme}://{MINIO_STORAGE_ENDPOINT}/{MINIO_STORAGE_MEDIA_BUCKET_NAME}/"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -118,11 +120,11 @@ WSGI_APPLICATION = 'bustle.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGES_DB'),
+        'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST', 'db'),
-        'PORT': os.getenv('POSTRES_PORT', '5432'),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
         'ATOMIC_REQUESTS': True,
     }
 }
@@ -163,6 +165,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

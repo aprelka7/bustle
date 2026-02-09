@@ -20,39 +20,21 @@ services:
   web:
     build: .
     ports:
-      - "8000:8000"
+      - "33311:8000"
     env_file:
       - .env
     volumes:
-      - .:/app
       - static:/app/static
-      - media:/app/media
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "python manage.py migrate && gunicorn bustle.wsgi:application --bind 0.0.0.0:8000"
-    networks:
-      - app-network
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - /etc/letsencrypt/:/etc/letsencrypt/
-      - static:/app/static
-      - media:/app/media
-    depends_on:
-      - web
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn bustle.wsgi:application --bind 0.0.0.0:8000"
     networks:
       - app-network
 
 volumes:
   postgres_data:
   static:
-  media:
 
 networks:
   app-network:
